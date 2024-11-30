@@ -73,7 +73,7 @@ export VAGRANT_PROVIDER
 # Определение числа процессоров для Vagrant box.
 # Если не задано, то Vagrantfile не будет конфигурировать эту настройку.
 # (int)
-VAGRANT_CPUS=''
+VAGRANT_CPUS='1'
 if [[ "${CUSTOM_ENV_VAGRANT_CPUS:+x}" && "${CUSTOM_ENV_VAGRANT_CPUS:-x}" != "x" ]]; then
     VAGRANT_CPUS=$CUSTOM_ENV_VAGRANT_CPUS
 fi
@@ -82,7 +82,7 @@ export VAGRANT_CPUS
 # Установка объема памяти (в МБ) для Vagrant.
 # Если не задано, Vagrantfile оставит настройки памяти без изменений.
 # (int)
-VAGRANT_MEMORY=''
+VAGRANT_MEMORY='2'
 if [[ "${CUSTOM_ENV_VAGRANT_MEMORY:+x}" && "${CUSTOM_ENV_VAGRANT_MEMORY:-x}" != "x" ]]; then
     VAGRANT_MEMORY=$CUSTOM_ENV_VAGRANT_MEMORY
 fi
