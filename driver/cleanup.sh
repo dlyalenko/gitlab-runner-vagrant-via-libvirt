@@ -21,7 +21,7 @@ trap "exit $SYSTEM_FAILURE_EXIT_CODE" ERR
 echo "-------------------------------"
 echo "----- ОЧИСТКА"
 echo "-------------------------------"
-echo "Vagrant UID:    ${GITLAB_VAGRANT_UID}"
+echo "Vagrant UID:    ${VAGRANT_UID}"
 echo "PWD:            $(pwd)"
 echo "CI_PROJECT_DIR: ${CUSTOM_ENV_CI_PROJECT_DIR}"
 echo "-------------------------------"
@@ -31,7 +31,7 @@ echo "Удаление виртуальной машины..."
 cd "$CUSTOM_ENV_CI_PROJECT_DIR" && vagrant destroy -f
 
 # Убеждаемся, что не находимся в удаляемой директории 
-cd "$GITLAB_VAGRANT_DRIVER_ROOT"
+cd "$VAGRANT_DRIVER_ROOT"
 
 # Удаляем директорию с билдами
 rm -rf "$BUILDS_DIR"

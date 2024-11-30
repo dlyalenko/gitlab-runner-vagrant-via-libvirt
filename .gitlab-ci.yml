@@ -1,0 +1,24 @@
+stages:
+    - build
+    - validate
+    - test
+    - vagrant
+
+include:
+  - component: $CI_SERVER_FQDN/d.lyalenko/gitlab-runner-vagrant-via-libvirt/vagrant@<VERSION>
+    inputs:
+      stage: vagrant
+      tags:
+        - vagrant
+      script:
+      - echo 'before_script - start'
+      - echo "Memory - $(expr $(awk '/MemTotal/ {print $2}' /proc/meminfo) / 1024) MB"
+      - echo "CPUs - $(nproc)"
+      - uname -a
+      - ip a
+      - hostname -f
+      - hostnamectl
+      - whoami
+      - pwd
+      - ls -la
+      - echo 'before_script - end'

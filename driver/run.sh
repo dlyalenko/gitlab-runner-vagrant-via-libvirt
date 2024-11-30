@@ -14,15 +14,15 @@ source "${currentDir}/base.sh"
 echo "---------------------------------------------------"
 echo "------------------ ЗАПУСК ${2}"
 echo "---------------------------------------------------"
-echo "Vagrant UID:                  ${GITLAB_VAGRANT_UID}"
+echo "Vagrant UID:                  ${VAGRANT_UID}"
 echo "whoami:                       $(whoami)"
 echo "PWD:                          $(pwd)"
 echo "PATH:                         ${PATH}"
 echo "CI_PROJECT_DIR:               ${CUSTOM_ENV_CI_PROJECT_DIR}"
-echo "GITLAB_VAGRANT_DEBUG:         ${GITLAB_VAGRANT_DEBUG}"
-echo "Driver Root:                  ${GITLAB_GITLAB_VAGRANT_DRIVER_ROOT}"
-echo "Vagrant Home:                 ${GITLAB_VAGRANT_HOME}"
-echo "GITLAB_VAGRANT_VAGRANTFILE:   ${GITLAB_VAGRANT_VAGRANTFILE}"
+echo "VAGRANT_DEBUG:                ${VAGRANT_DEBUG}"
+echo "Driver Root:                  ${VAGRANT_DRIVER_ROOT}"
+echo "Vagrant Home:                 ${VAGRANT_HOME}"
+echo "VAGRANT_VAGRANTFILE:          ${VAGRANT_VAGRANTFILE}"
 echo "---------------------------------------------------"
 
 case "${2}" in
@@ -42,7 +42,7 @@ case "${2}" in
             exit $BUILD_FAILURE_EXIT_CODE
         }
 
-        if [[ $GITLAB_VAGRANT_DEBUG -eq 1 ]]; then
+        if [[ $VAGRANT_DEBUG -eq 1 ]]; then
             echo "---------------------------------------------------"
             echo "DEBUG: env ----------------------------------------"
             env
@@ -53,11 +53,11 @@ case "${2}" in
             echo "---------------------------------------------------"
         fi
 
-        vagrantfile_path="${CUSTOM_ENV_CI_PROJECT_DIR}/${GITLAB_VAGRANT_VAGRANTFILE}"
+        vagrantfile_path="${CUSTOM_ENV_CI_PROJECT_DIR}/${VAGRANT_VAGRANTFILE}"
         if [[ ! -f "${vagrantfile_path}" ]]; then
-            vagrantfile_path="${GITLAB_VAGRANT_DRIVER_ROOT}/builds/${GITLAB_VAGRANT_VAGRANTFILE}"
+            vagrantfile_path="${VAGRANT_DRIVER_ROOT}/builds/${VAGRANT_VAGRANTFILE}"
             if [[ -f "${vagrantfile_path}" ]]; then
-                cp "${vagrantfile_path}" "${BUILDS_DIR}/${GITLAB_VAGRANT_VAGRANTFILE}" || {
+                cp "${vagrantfile_path}" "${BUILDS_DIR}/${VAGRANT_VAGRANTFILE}" || {
                     echo "Не удалось скопировать Vagrantfile"
                     exit $BUILD_FAILURE_EXIT_CODE
                 }
@@ -71,7 +71,7 @@ case "${2}" in
         vagrant validate || exit $BUILD_FAILURE_EXIT_CODE
 
         echo "VAGRANT UP"
-        vagrant up --provider="$GITLAB_VAGRANT_PROVIDER" || exit $BUILD_FAILURE_EXIT_CODE
+        vagrant up --provider="$VAGRANT_PROVIDER" || exit $BUILD_FAILURE_EXIT_CODE
         ;;
         
     restore_cache | archive_cache)
@@ -89,7 +89,7 @@ case "${2}" in
         sed -i "s#${CUSTOM_ENV_CI_PROJECT_DIR}#/vagrant#g" "$scriptPath"
         chmod 700 "$scriptPath" || exit $BUILD_FAILURE_EXIT_CODE
 
-        [[ $GITLAB_VAGRANT_DEBUG -eq 1 ]] && {
+        [[ $VAGRANT_DEBUG -eq 1 ]] && {
             echo "DEBUG: Содержимое скрипта ------"
             cat "$scriptPath"
         }

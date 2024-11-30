@@ -1,0 +1,95 @@
+Vagrant.configure("2") do |instance|
+    # Устанавливаем достаточное время для загрузки VM (сек)
+    # Значение по-умолчанию: 300 сек
+    instance.vm.boot_timeout = 600
+  
+    # Проверяем наличие переменной окружения CUSTOM_ENV_CI_PROJECT_DIR и если есть, 
+    # то испольуем её для проброса директории из хост-машины (/vagrant) в "гостевой" инстанс
+    # https://developer.hashicorp.com/vagrant/docs/synced-folders/basic_usage
+    project_dir = ENV.fetch("CUSTOM_ENV_CI_PROJECT_DIR", "").to_s.strip
+    if project_dir != ""
+      instance.vm.synced_folder project_dir, "/vagrant"
+    end
+    
+    # Проверяем наличие переменной окружения VAGRANT_HOSTNAME и если есть,
+    # то испольуем её для установки в качестве имени хоста (hostname) в виртуальной машине
+    hostname = ENV.fetch("VAGRANT_HOSTNAME", "").to_s.strip
+    if hostname != ""
+      instance.vm.hostname = hostname
+    end
+    
+    # Устанавливаем базовый образ alse-vanilla-adv/1.7.5
+    box = ENV.fetch("VAGRANT_BASE_BOX", "").to_s.strip
+    if box != ""
+      instance.vm.box box, "alse-vanilla-adv/1.7.5"
+    end
+  
+    # Конфигурация для VirtualBox
+    # https://www.virtualbox.org/manual/
+    instance.vm.provider "virtualbox" do |virtualbox|
+
+      # Отключить GUI при запуске инстанса для VirtualBox (bool)
+      virtualbox.gui = false
+  
+      # Устанавливаем имя виртуальной машины (str)
+      vb_name = ENV.fetch("VAGRANT_VBOX_NAME", "").to_s.strip
+      if vb_name != ""
+        virtualbox.name = vb_name
+      end
+  
+      # Количество vCPU и объем памяти (int)
+      virtualbox.cpus = ENV.fetch("VAGRANT_CPUS", "").to_i
+      virtualbox.memory = ENV.fetch("VAGRANT_MEMORY", "").to_i
+    end
+  
+    # Конфигурация для libvirt
+    # https://libvirt.org/formatdomain.html
+    instance.vm.provider "libvirt" do |libvirt|
+    
+      # Устанавливаем имя виртуальной машины (str)
+      vb_name = ENV.fetch("VAGRANT_VBOX_NAME", "").to_s.strip
+      if vb_name != ""
+        libvirt.name = vb_name
+      end
+
+      # Количество vCPU и объем памяти (int)
+      libvirt.cpus = ENV.fetch("VAGRANT_CPUS", "").to_i
+      libvirt.memory = ENV.fetch("VAGRANT_MEMORY", "").to_i
+  
+      # TODO:
+      # Настройка сети, если вообще нужна
+      # network = ENV.fetch("VAGRANT_NETWORK", "").to_s.strip
+      # if network != ""
+      #   libvirt.networks = [
+      #     {
+      #       type: "network",
+      #     }
+      #   ]
+      # end
+    end
+  
+    # Проверка, нужно ли запускать Puppet
+    puppet_run = ENV.fetch("VAGRANT_RUN_PUPPET", "0").to_i
+    if puppet_run > 0
+      # Provisioning с использованием Puppet
+      instance.vm.provision "shell", run: "always", privileged: true, inline: <<-SHELL
+        puppet_exe='/opt/puppetlabs/bin/puppet'
+        if [[ -x "${puppet_exe}" ]]; then
+          puppet_lock=$(/opt/puppetlabs/bin/puppet agent --genconfig | grep agent_catalog_run_lockfile | awk '{print $3}')
+          if [[ -n "${puppet_lock}" ]]; then
+            # Ожидаем, пока файл блокировки не исчезнет
+            cnt=0
+            while [[ -f "${puppet_lock}" && $cnt -lt 10 ]]; do
+              cnt=$((cnt + 1))
+              echo "(${cnt} из 10) Файл блокировки Puppet существует, ждем завершения. Ждем 15 секунд."
+              sleep 15
+            done
+          fi
+          puppet_server=$(/opt/puppetlabs/bin/puppet agent --genconfig | grep ' server =' | awk '{print $3}')
+          if [[ -n "${puppet_server}" ]]; then
+            $puppet_exe agent -t || true
+          fi
+        fi
+      SHELL
+    end
+  end

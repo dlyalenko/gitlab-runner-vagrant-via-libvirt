@@ -28,7 +28,7 @@ cat << EOS
     "version": "REPLACE_WITH_VERSION_TAG"       # Версия драйвера
   },
   "job_env" : {
-    "VAGRANT_UID": "${GITLAB_VAGRANT_UID}"      # Уникальный идентификатор задания
+    "VAGRANT_UID": "${VAGRANT_UID}"      # Уникальный идентификатор задания
   }
 }
 EOS

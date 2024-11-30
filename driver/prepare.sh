@@ -46,14 +46,14 @@ echo "Директория проекта:             ${CUSTOM_ENV_CI_PROJECT_D
 
 # Переменные, связанные с Vagrant.
 echo "------------------------ VAGRANT -----------------------------"
-echo "Уникальный идентификатор (UID): ${GITLAB_VAGRANT_UID}"
-echo "Файл Vagrantfile:               ${GITLAB_VAGRANT_VAGRANTFILE}"
-echo "Имя хоста (HOSTNAME):           ${GITLAB_VAGRANT_HOSTNAME}"
-echo "Базовый образ (BASE BOX):       ${GITLAB_VAGRANT_BASE_BOX}"
-echo "Провайдер:                      ${GITLAB_VAGRANT_PROVIDER}"
-echo "Имя виртуальной машины:         ${GITLAB_VAGRANT_VBOX_NAME}"
-echo "Количество CPU:                 ${GITLAB_VAGRANT_CPUS:-Не задано}"
-echo "Объем памяти (MB):              ${GITLAB_VAGRANT_MEMORY:-Не задано}"
+echo "Уникальный идентификатор (UID): ${VAGRANT_UID}"
+echo "Файл Vagrantfile:               ${VAGRANT_VAGRANTFILE}"
+echo "Имя хоста (HOSTNAME):           ${VAGRANT_HOSTNAME}"
+echo "Базовый образ (BASE BOX):       ${VAGRANT_BASE_BOX}"
+echo "Провайдер:                      ${VAGRANT_PROVIDER}"
+echo "Имя виртуальной машины:         ${VAGRANT_VBOX_NAME}"
+echo "Количество CPU:                 ${VAGRANT_CPUS:-Не задано}"
+echo "Объем памяти (MB):              ${VAGRANT_MEMORY:-Не задано}"
 echo "--------------------------------------------------------------"
 
 # Проверка установленных версий инструментов.
@@ -62,12 +62,12 @@ if ! command -v vagrant &>/dev/null; then
     exit 1
 fi
 
-if [[ "${GITLAB_VAGRANT_PROVIDER}" == "virtualbox" ]]; then
+if [[ "${VAGRANT_PROVIDER}" == "virtualbox" ]]; then
     if ! command -v vboxmanage &>/dev/null; then
         echo "Ошибка: VirtualBox не установлен или не доступен в PATH."
         exit 1
     fi
-elif [[ "${GITLAB_VAGRANT_PROVIDER}" == "libvirt" ]]; then
+elif [[ "${VAGRANT_PROVIDER}" == "libvirt" ]]; then
     if ! command -v virsh &>/dev/null; then
         echo "Ошибка: libvirt не установлен или не доступен в PATH."
         exit 1
@@ -78,7 +78,7 @@ elif [[ "${GITLAB_VAGRANT_PROVIDER}" == "libvirt" ]]; then
         exit 1
     fi
 else
-    echo "Ошибка: Указанный провайдер ${GITLAB_VAGRANT_PROVIDER} не поддерживается"
+    echo "Ошибка: Указанный провайдер ${VAGRANT_PROVIDER} не поддерживается"
     exit 1
 fi
 
