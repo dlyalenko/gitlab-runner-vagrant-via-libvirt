@@ -29,10 +29,10 @@ echo "--------------------------------------------------------------"
 
 # Информация о текущем окружении.
 echo "Текущая директория (PWD):       $(pwd)"
-echo "Версия VirtualBox:              $(vboxmanage --version || echo 'VirtualBox не установлен')"
-echo "Версия Libvirt:                 $(virsh --version || echo 'libvirt не установлен')"
-echo "Плагин Libvirt для Vagrant:     $(vagrant plugin list | grep vagrant-libvirt || echo 'vagrant-libvirt не установлен')"
-echo "Версия Vagrant:                 $(vagrant --version || echo 'Vagrant не установлен')"
+echo "Версия VirtualBox:              $(vboxmanage --version || echo 'не установлен')"
+echo "Версия Libvirt:                 $(virsh --version || echo 'не установлен')"
+echo "Плагин Libvirt для Vagrant:     $(vagrant plugin list | grep vagrant-libvirt || echo 'не установлен')"
+echo "Версия Vagrant:                 $(vagrant --version || echo 'не установлен')"
 
 # Переменные окружения.
 echo "------------------ ПЕРЕМЕННЫЕ ОКРУЖЕНИЯ ----------------------"
@@ -40,9 +40,9 @@ echo "Пользователь (USER):            ${USER}"
 echo "Логин (LOGNAME):                ${LOGNAME}"
 echo "PATH:                           ${PATH}"
 echo "Директория сборки (BUILDS_DIR): ${BUILDS_DIR}"
-echo "Директория сборок CI:           ${CUSTOM_ENV_CI_BUILDS_DIR:-Не задано}"
+echo "Директория сборок CI:           ${CUSTOM_ENV_CI_BUILDS_DIR:-Не задана}"
 echo "Директория кеша (CACHE_DIR):    ${CACHE_DIR}"
-echo "Директория проекта:             ${CUSTOM_ENV_CI_PROJECT_DIR:-Не задано}"
+echo "Директория проекта:             ${CUSTOM_ENV_CI_PROJECT_DIR:-Не задана}"
 
 # Переменные, связанные с Vagrant.
 echo "------------------------ VAGRANT -----------------------------"
