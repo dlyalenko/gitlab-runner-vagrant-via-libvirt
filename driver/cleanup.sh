@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
+
+# Скрипт самоочистки после завершения работы Vagrant
 #
-# Скрипт очистки после завершения работы Vagrant
-#
+
+echo "$SYSTEM_FAILURE_EXIT_CODE"
+
 
 # Определяем текущую директорию скрипта
 # (str)
@@ -19,7 +22,7 @@ set -euo pipefail
 trap "exit $SYSTEM_FAILURE_EXIT_CODE" ERR
 
 echo "-------------------------------"
-echo "---------- ОЧИСТКА"
+echo "---------- ОЧИЩАЕМ"
 echo "-------------------------------"
 echo "Vagrant UID:    ${VAGRANT_UID}"
 echo "PWD:            $(pwd)"
