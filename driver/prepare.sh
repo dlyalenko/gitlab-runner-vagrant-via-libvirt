@@ -16,7 +16,7 @@ source "${currentDir}/base.sh"
 # -u: запрещает использование неинициализированных переменных
 # -o pipefail: завершить выполнение скрипта, если одна из команд в пайпе завершится с ошибкой
 # См. документацию: https://gist.github.com/mohanpedala/1e2ff5661761d3abd0385e8223e16425
-set -euo pipefail
+set -eo pipefail
 
 # Обработка ошибок: при возникновении ошибки скрипт завершится с системным кодом ошибки.
 trap 'echo "Ошибка: Скрипт завершился кодом $? на строке $LINENO"; exit $SYSTEM_FAILURE_EXIT_CODE' ERR
@@ -28,11 +28,13 @@ echo "----------------------- VAGRANT VM ---------------------------"
 echo "--------------------------------------------------------------"
 
 # Информация о текущем окружении.
+echo "Провайдер:                      ${VAGRANT_PROVIDER}"
 echo "Текущая директория (PWD):       $(pwd)"
-echo "Версия VirtualBox:              $(vboxmanage --version || echo 'не установлен')"
-echo "Версия Libvirt:                 $(virsh --version || echo 'не установлен')"
-echo "Плагин Libvirt для Vagrant:     $(vagrant plugin list | grep vagrant-libvirt || echo 'не установлен')"
-echo "Версия Vagrant:                 $(vagrant --version || echo 'не установлен')"
+echo "Версия VirtualBox:              $(vboxmanage --version || echo 'Не установлен')"
+echo "Версия Libvirt:                 $(virsh --version || echo 'Не установлен')"
+echo "Плагин Libvirt для Vagrant:     $(vagrant plugin list | grep 'vagrant-libvirt' || echo 'Не установлен')"
+echo "Версия Vagrant:                 $(vagrant --version || echo 'Не установлен')"
+
 
 # Переменные окружения.
 echo "------------------ ПЕРЕМЕННЫЕ ОКРУЖЕНИЯ ----------------------"
@@ -73,7 +75,7 @@ elif [[ "${VAGRANT_PROVIDER}" == "libvirt" ]]; then
         exit 1
     fi
 
-    if ! vagrant plugin list | grep vagrant-libvirt; then
+    if ! vagrant plugin list | grep -q "vagrant-libvirt"; then
         echo "Ошибка: Плагин vagrant-libvirt не установлен. Установите его с помощью 'vagrant plugin install vagrant-libvirt'"
         exit 1
     fi
@@ -83,5 +85,5 @@ else
 fi
 
 # Дополнительная диагностика (по необходимости).
-echo "Все проверки пройдены. Vagrant VM готова к запуску."
+echo "Все проверки пройдены. VM к запуску готова..."
 
