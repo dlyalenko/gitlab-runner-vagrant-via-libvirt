@@ -30,8 +30,8 @@ echo "--------------------------------------------------------------"
 # Информация о текущем окружении.
 echo "Текущая директория (PWD):       $(pwd)"
 echo "Версия VirtualBox:              $(vboxmanage --version || echo 'VirtualBox не установлен')"
-echo "Версия libvirt:                 $(virsh --version || echo 'libvirt не установлен')"
-echo "Плагин libvirt для Vagrant:     $(vagrant plugin list | grep vagrant-libvirt || echo 'vagrant-libvirt не установлен')"
+echo "Версия Libvirt:                 $(virsh --version || echo 'libvirt не установлен')"
+echo "Плагин Libvirt для Vagrant:     $(vagrant plugin list | grep vagrant-libvirt || echo 'vagrant-libvirt не установлен')"
 echo "Версия Vagrant:                 $(vagrant --version || echo 'Vagrant не установлен')"
 
 # Переменные окружения.
@@ -58,22 +58,22 @@ echo "--------------------------------------------------------------"
 
 # Проверка установленных версий инструментов.
 if ! command -v vagrant &>/dev/null; then
-    echo "Ошибка: Vagrant не установлен или не доступен в PATH."
+    echo "Ошибка: Vagrant не установлен или не доступен в PATH"
     exit 1
 fi
 
 if [[ "${VAGRANT_PROVIDER}" == "virtualbox" ]]; then
     if ! command -v vboxmanage &>/dev/null; then
-        echo "Ошибка: VirtualBox не установлен или не доступен в PATH."
+        echo "Ошибка: VirtualBox не установлен или не доступен в PATH"
         exit 1
     fi
 elif [[ "${VAGRANT_PROVIDER}" == "libvirt" ]]; then
     if ! command -v virsh &>/dev/null; then
-        echo "Ошибка: libvirt не установлен или не доступен в PATH."
+        echo "Ошибка: libvirt не установлен или не доступен в PATH"
         exit 1
     fi
 
-    if ! vagrant plugin list | grep -q vagrant-libvirt; then
+    if ! vagrant plugin list | grep vagrant-libvirt; then
         echo "Ошибка: Плагин vagrant-libvirt не установлен. Установите его с помощью 'vagrant plugin install vagrant-libvirt'"
         exit 1
     fi
