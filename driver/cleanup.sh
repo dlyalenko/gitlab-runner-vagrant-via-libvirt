@@ -19,7 +19,7 @@ set -euo pipefail
 trap "exit $SYSTEM_FAILURE_EXIT_CODE" ERR
 
 echo "-------------------------------"
-echo "----- ОЧИСТКА"
+echo "---------- ОЧИСТКА"
 echo "-------------------------------"
 echo "Vagrant UID:    ${VAGRANT_UID}"
 echo "PWD:            $(pwd)"
@@ -30,11 +30,8 @@ echo "-------------------------------"
 echo "Удаление виртуальной машины..."
 cd "$CUSTOM_ENV_CI_PROJECT_DIR" && vagrant destroy -f
 
-# Убеждаемся, что не находимся в удаляемой директории 
-cd "$VAGRANT_DRIVER_ROOT"
-
-# Удаляем директорию с билдами
-rm -rf "$BUILDS_DIR"
+# Убеждаемся, что не находимся в удаляемой директории и удаляем директорию с билдом
+cd "$VAGRANT_DRIVER_ROOT" && rm -rf "$BUILDS_DIR"
 
 # Если произошла ошибка при удалении, завершаем скрипт с кодом ошибки
 if [[ $? -ne 0 ]]; then
