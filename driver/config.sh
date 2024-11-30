@@ -20,15 +20,15 @@ trap "exit $SYSTEM_FAILURE_EXIT_CODE" ERR
 # Генерируем конфигурацию для runner'а в формате JSON
 cat << EOS
 {
-  "builds_dir": "${BUILDS_DIR}",                # Директория сборки
-  "cache_dir": "${CACHE_DIR}",                  # Директория кеша
-  "builds_dir_is_shared": true,                 # Указывает, что директория сборок общая
+  "builds_dir": "${BUILDS_DIR}",
+  "cache_dir": "${CACHE_DIR}",
+  "builds_dir_is_shared": true,
   "driver": {
-    "name": "Vagrant Libvirt Driver",           # Название драйвера
-    "version": "REPLACE_WITH_VERSION_TAG"       # Версия драйвера
+    "name": "Vagrant Libvirt Driver",
+    "version": "REPLACE_WITH_VERSION_TAG"
   },
   "job_env" : {
-    "VAGRANT_UID": "${VAGRANT_UID}"      # Уникальный идентификатор задания
+    "VAGRANT_UID": "${VAGRANT_UID}"
   }
 }
 EOS
