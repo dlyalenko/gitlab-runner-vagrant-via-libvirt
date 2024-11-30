@@ -51,7 +51,7 @@ export VAGRANT_RUN_PUPPET
 # Определяем базовый Vagrant box.
 # Если переменная окружения CUSTOM_ENV_VAGRANT_BASE_BOX задана, она переопределяет значение по умолчанию.
 # (str)
-VAGRANT_BASE_BOX="alse-vanilla-adv/1.7.5"
+VAGRANT_BASE_BOX="alse-1.7.5-adv-qemu-mg13.1.1-amd64"
 if [[ "${CUSTOM_ENV_CI_JOB_IMAGE:+x}" && "${CUSTOM_ENV_CI_JOB_IMAGE:-x}" != "x" ]]; then
     VAGRANT_BASE_BOX="${CUSTOM_ENV_CI_JOB_IMAGE}"
 elif [ "${CUSTOM_ENV_VAGRANT_BASE_BOX:+x}" ]; then
@@ -100,7 +100,7 @@ export VAGRANT_VBOX_NAME
 # Определение хоста для виртуальной машины.
 # Полезно для тестирования или сервисов (nginx), которые зависят от конкретных имен хостов.
 # (str)
-VAGRANT_HOSTNAME=""
+VAGRANT_HOSTNAME=$VAGRANT_UID
 if [[ "${CUSTOM_ENV_VAGRANT_HOSTNAME:+x}" && "${CUSTOM_ENV_VAGRANT_HOSTNAME:-x}" != "x" ]]; then
     VAGRANT_HOSTNAME="${CUSTOM_ENV_VAGRANT_HOSTNAME}"
 fi
