@@ -53,8 +53,8 @@ Vagrant.configure("2") do |instance|
       # TODO:
       # Надо привести в порядок
       libvirt.qemu_use_agent = true
-      config.ssh.username = 'astra'
-      config.ssh.password = 'astra'
+      override.ssh.username = 'astra'
+      override.ssh.password = 'astra'
       #override.vm.synced_folder '.', '/mnt/shared', type: 'virtiofs', nfs: false
       override.nfs.functional = false
       override.nfs.verify_installed = false
