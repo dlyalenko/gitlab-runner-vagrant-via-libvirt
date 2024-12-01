@@ -1,5 +1,6 @@
 stages:
   - vagrant
+  
 execute_commands:
   stage: vagrant
   tags:
@@ -12,6 +13,7 @@ execute_commands:
     - echo "CPUs - $(nproc)"
     - uname -a
     - ip a
+    - ping -c 1 -W 1 ya.ru >/dev/null 2>&1 && echo "Ходим, пингуем Яндекс" || echo "Связанности нет"
     - hostname -f
     - hostnamectl
     - whoami
