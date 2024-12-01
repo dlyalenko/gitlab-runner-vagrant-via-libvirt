@@ -59,7 +59,7 @@ Vagrant.configure("2") do |instance|
       override.nfs.functional = false
       override.nfs.verify_installed = false
       override.nfs.verify_installed = false
-      override.vm.synced_folder ".", "/mnt/shared", type: "rsync", nfs: false
+      override.vm.synced_folder ".", "/vagrant", type: "rsync", nfs: false
 
   
       # TODO:
