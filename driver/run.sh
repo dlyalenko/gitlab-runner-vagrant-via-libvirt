@@ -82,19 +82,20 @@ case "${2}" in
         ;;
         
     step_script | build_script | after_script)
-        scriptPath="${CUSTOM_ENV_CI_PROJECT_DIR}/${SCRIPT_PREFIX}-${2}.sh"
-        cd "${CUSTOM_ENV_CI_PROJECT_DIR}"
-        cat "$1" | awk '{gsub(/\\n/,"\n")}1' > "$scriptPath"
-        sed -i "s#${CUSTOM_ENV_CI_PROJECT_DIR}.tmp#/vagrant/vagrant.tmp#g" "$scriptPath"
-        sed -i "s#${CUSTOM_ENV_CI_PROJECT_DIR}#/vagrant#g" "$scriptPath"
-        chmod 700 "$scriptPath" || exit $BUILD_FAILURE_EXIT_CODE
+        # scriptPath="${CUSTOM_ENV_CI_PROJECT_DIR}/${SCRIPT_PREFIX}-${2}.sh"
+        # cd "${CUSTOM_ENV_CI_PROJECT_DIR}"
+        # cat "$1" | awk '{gsub(/\\n/,"\n")}1' > "$scriptPath"
+        # sed -i "s#${CUSTOM_ENV_CI_PROJECT_DIR}.tmp#/vagrant/vagrant.tmp#g" "$scriptPath"
+        # sed -i "s#${CUSTOM_ENV_CI_PROJECT_DIR}#/vagrant#g" "$scriptPath"
+        # chmod 700 "$scriptPath" || exit $BUILD_FAILURE_EXIT_CODE
 
-        [[ $VAGRANT_DEBUG -eq 1 ]] && {
-            echo "DEBUG: Содержимое скрипта ------"
-            cat "$scriptPath"
-        }
+        # [[ $VAGRANT_DEBUG -eq 1 ]] && {
+        #     echo "DEBUG: Содержимое скрипта ------"
+        #     cat "$scriptPath"
+        # }
 
-        vagrant ssh -c "cd /vagrant && /vagrant/${SCRIPT_PREFIX}-${2}.sh" || exit $BUILD_FAILURE_EXIT_CODE
+        # vagrant ssh -c "cd /vagrant && /vagrant/${SCRIPT_PREFIX}-${2}.sh" || exit $BUILD_FAILURE_EXIT_CODE
+        echo "Мы тут"
         ;;
         
     upload_artifacts_on_success)
