@@ -59,7 +59,17 @@ Vagrant.configure("2") do |instance|
       override.nfs.functional = false
       override.nfs.verify_installed = false
       override.nfs.verify_installed = false
-      override.vm.synced_folder ".", "/vagrant", type: "rsync", nfs: false
+      #override.vm.synced_folder ".", "/vagrant", type: "rsync", nfs: false
+      
+      
+      # Проверяем наличие переменной окружения CUSTOM_ENV_CI_PROJECT_DIR и если есть, 
+      # то испольуем её для проброса директории из хост-машины (/vagrant) в "гостевой" инстанс
+      # https://developer.hashicorp.com/vagrant/docs/synced-folders/basic_usage
+      project_dir = ENV.fetch("CUSTOM_ENV_CI_PROJECT_DIR", "").to_s.strip
+      if project_dir != ""
+        libvirt.memorybacking :access, :mode => 'shared'
+        override.vm.synced_folder project_dir, "/vagrant", type: "virtiofs", nfs: false
+      end
 
   
       # TODO:
