@@ -49,6 +49,8 @@ Vagrant.configure("2") do |instance|
       # Количество vCPU и объем памяти (int)
       libvirt.cpus = ENV.fetch("VAGRANT_CPUS", "").to_i
       libvirt.memory = ENV.fetch("VAGRANT_MEMORY", "").to_i
+      libvirt.qemu_use_agent = true
+
   
       # TODO:
       # Настройка сети, если вообще нужна
@@ -56,7 +58,8 @@ Vagrant.configure("2") do |instance|
       # if network != ""
       #   libvirt.networks = [
       #     {
-      #       type: "network",
+      #       network_name: "vagrant-libvirt",
+      #       ip: "10.77.145.110"
       #     }
       #   ]
       # end
