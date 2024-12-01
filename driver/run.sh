@@ -81,7 +81,7 @@ case "${2}" in
         }
         ;;
         
-    step_script | build_script | after_script)
+    #step_script | build_script | after_script)
         # scriptPath="${CUSTOM_ENV_CI_PROJECT_DIR}/${SCRIPT_PREFIX}-${2}.sh"
         # cd "${CUSTOM_ENV_CI_PROJECT_DIR}"
         # cat "$1" | awk '{gsub(/\\n/,"\n")}1' > "$scriptPath"
@@ -95,8 +95,8 @@ case "${2}" in
         # }
 
         # vagrant ssh -c "cd /vagrant && /vagrant/${SCRIPT_PREFIX}-${2}.sh" || exit $BUILD_FAILURE_EXIT_CODE
-        echo "Мы тут"
-        ;;
+    #    echo "Мы тут"
+    #    ;;
         
     upload_artifacts_on_success)
         cd "${CUSTOM_ENV_CI_PROJECT_DIR}" && /bin/bash "$1" || {
