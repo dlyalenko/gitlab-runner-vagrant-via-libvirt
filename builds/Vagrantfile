@@ -44,12 +44,22 @@ Vagrant.configure("2") do |instance|
   
     # Конфигурация для libvirt
     # https://libvirt.org/formatdomain.html
-    instance.vm.provider "libvirt" do |libvirt|
+    instance.vm.provider "libvirt" do |libvirt, override|
 
       # Количество vCPU и объем памяти (int)
       libvirt.cpus = ENV.fetch("VAGRANT_CPUS", "").to_i
       libvirt.memory = ENV.fetch("VAGRANT_MEMORY", "").to_i
+
+      # TODO:
+      # Надо привести в порядок
       libvirt.qemu_use_agent = true
+      config.ssh.username = 'astra'
+      config.ssh.password = 'astra'
+      #override.vm.synced_folder '.', '/mnt/shared', type: 'virtiofs', nfs: false
+      override.nfs.functional = false
+      override.nfs.verify_installed = false
+      override.nfs.verify_installed = false
+      override.vm.synced_folder ".", "/mnt/shared", type: "rsync", nfs: false
 
   
       # TODO:
