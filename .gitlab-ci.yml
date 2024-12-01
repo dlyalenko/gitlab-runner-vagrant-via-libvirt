@@ -1,12 +1,11 @@
 stages:
   - vagrant
-
 execute_commands:
   stage: vagrant
   tags:
     - vagrant
   variables:
-    VAGRANT_DEBUG: "1"
+    VAGRANT_DEBUG: "0"
   script:
     - echo 'before_script - start'
     - echo "Memory - $(expr $(awk '/MemTotal/ {print $2}' /proc/meminfo) / 1024) MB"
