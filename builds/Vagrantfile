@@ -1,11 +1,13 @@
 Vagrant.configure("2") do |instance|
     # Устанавливаем достаточное время для загрузки VM (сек)
     # Значение по-умолчанию: 300 сек
+    # (int)
     instance.vm.boot_timeout = 600
   
     # Проверяем наличие переменной окружения CUSTOM_ENV_CI_PROJECT_DIR и если есть, 
     # то испольуем её для проброса директории из хост-машины (/vagrant) в "гостевой" инстанс
     # https://developer.hashicorp.com/vagrant/docs/synced-folders/basic_usage
+    # (str)
     project_dir = ENV.fetch("CUSTOM_ENV_CI_PROJECT_DIR", "").to_s.strip
     if project_dir != ""
       instance.vm.synced_folder project_dir, "/vagrant"
@@ -13,12 +15,14 @@ Vagrant.configure("2") do |instance|
     
     # Проверяем наличие переменной окружения VAGRANT_HOSTNAME и если есть,
     # то испольуем её для установки в качестве имени хоста (hostname) в виртуальной машине
+    # (str)
     hostname = ENV.fetch("VAGRANT_HOSTNAME", "").to_s.strip
     if hostname != ""
       instance.vm.hostname = hostname
     end
     
     # Устанавливаем базовый образ alse-1.7.5-adv-qemu-mg13.1.1-amd64
+    # (str)
     box = ENV.fetch("VAGRANT_BASE_BOX", "").to_s.strip
     if box != ""
       instance.vm.box = "alse-1.7.5-adv-qemu-mg13.1.1-amd64"
@@ -28,16 +32,19 @@ Vagrant.configure("2") do |instance|
     # https://www.virtualbox.org/manual/
     instance.vm.provider "virtualbox" do |virtualbox|
 
-      # Отключить GUI при запуске инстанса для VirtualBox (bool)
+      # Отключить GUI при запуске инстанса для VirtualBox
+      # (bool)
       virtualbox.gui = false
   
-      # Устанавливаем имя виртуальной машины (str)
+      # Устанавливаем имя виртуальной машины
+      # (str)
       vb_name = ENV.fetch("VAGRANT_VBOX_NAME", "").to_s.strip
       if vb_name != ""
         virtualbox.name = vb_name
       end
   
-      # Количество vCPU и объем памяти (int)
+      # Количество vCPU и объем памяти
+      # (int)
       virtualbox.cpus = ENV.fetch("VAGRANT_CPUS", "").to_i
       virtualbox.memory = ENV.fetch("VAGRANT_MEMORY", "").to_i
     end
@@ -46,15 +53,26 @@ Vagrant.configure("2") do |instance|
     # https://libvirt.org/formatdomain.html
     instance.vm.provider "libvirt" do |libvirt, override|
 
-      # Количество vCPU и объем памяти (int)
+      # Количество vCPU и объем памяти
+      # (int)
       libvirt.cpus = ENV.fetch("VAGRANT_CPUS", "").to_i
       libvirt.memory = ENV.fetch("VAGRANT_MEMORY", "").to_i
 
+      # SSH username
+      # (str)
+      ssh_username = ENV.fetch("VAGRANT_SSH_USERNAME","").to_s.strip
+      if ssh_username != ""
+        override.ssh.username = ssh_username
+      end
+      
+      # SSH password
+      # (str)
+      ssh_password = ENV.fetch("VAGRANT_SSH_PASSWORD","").to_s.strip
+      if ssh_password != ""
+        override.ssh.password = ssh_password
+      end
+
       # TODO:
-      # Надо привести в порядок
-      libvirt.qemu_use_agent = true
-      override.ssh.username = 'astra'
-      override.ssh.password = 'astra'
       #override.vm.synced_folder '.', '/mnt/shared', type: 'virtiofs', nfs: false
       override.nfs.functional = false
       override.nfs.verify_installed = false
@@ -71,9 +89,11 @@ Vagrant.configure("2") do |instance|
         override.vm.synced_folder project_dir, "/vagrant", type: "virtiofs", nfs: false
       end
 
-  
-      # TODO:
-      # Настройка сети, если вообще нужна
+      # Настройка сети
+      # Использовать QEMU Agent для получения IP адреса
+      # (bool)
+      libvirt.qemu_use_agent = true
+      
       # network = ENV.fetch("VAGRANT_NETWORK", "").to_s.strip
       # if network != ""
       #   libvirt.networks = [

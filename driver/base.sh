@@ -4,22 +4,38 @@
 # config.sh, prepare.sh, run.sh и cleanup.sh
 #
 
-# Определяем текущую директорию скрипта
+# Определяем текущую директорию
 # (str)
 currentDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
-# Определяем корневую директорию для драйвера Vagrant
+# Определяем корневую директорию драйвера Vagrant
 # (str)
 VAGRANT_DRIVER_ROOT="$( cd "$( dirname "${currentDir}" )" >/dev/null 2>&1 && pwd )"
 export VAGRANT_DRIVER_ROOT
 
-# Устанавливаем местоположение домашней директории Vagrant.
-# Если не задано, используется директория .vagrant.d в корне проекта.
+# Устанавливаем местоположение домашней директории Vagrant
+# Если не задано, используется директория .vagrant.d в корне
 # (str)
 export VAGRANT_HOME="${VAGRANT_DRIVER_ROOT}/.vagrant.d"
 
-# Флаг, указывающий, что скрипт выполняется с использованием драйвера Vagrant.
-# Этот флаг можно использовать в Vagrantfile для проверки среды.
+# SSH username – имя пользователя, для доступа к box через ssh
+# (str)
+VAGRANT_SSH_USERNAME=astra
+if [[ "${CUSTOM_ENV_VAGRANT_SSH_USERNAME:+x}" && "${CUSTOM_ENV_VAGRANT_SSH_USERNAME:-x}" != "x" ]]; then
+    VAGRANT_SSH_USERNAME=$CUSTOM_ENV_VAGRANT_SSH_USERNAME
+fi
+export VAGRANT_SSH_USERNAME
+
+# SSH password – пароль пользователя, для доступа к box через ssh
+# (str)
+VAGRANT_SSH_PASSWORD=astra
+if [[ "${CUSTOM_ENV_VAGRANT_SSH_PASSWORD:+x}" && "${CUSTOM_ENV_VAGRANT_SSH_PASSWORD:-0}" != "0" ]]; then
+    VAGRANT_SSH_PASSWORD=$CUSTOM_ENV_VAGRANT_SSH_PASSWORD
+fi
+export VAGRANT_SSH_PASSWORD
+
+# Флаг, указывающий, что скрипт выполняется с использованием драйвера Vagrant
+# Этот флаг используется в Vagrantfile для проверки среды
 # (bool)
 VAGRANT_DRIVER=1
 export VAGRANT_DRIVER
@@ -39,8 +55,8 @@ if [[ "${CUSTOM_ENV_VAGRANT_DEBUG:+x}" && "${CUSTOM_ENV_VAGRANT_DEBUG:-0}" != "0
 fi
 export VAGRANT_DEBUG
 
-# Флаг для выполнения Puppet при старте машины.
-# Если установлено любое значение, кроме 0, то будет выполнена команда `puppet agent --test`.
+# Флаг для выполнения Puppet при старте машины
+# Если установлено любое значение, кроме 0, то будет выполнена команда `puppet agent --test`
 # (bool)
 VAGRANT_RUN_PUPPET=0
 if [[ "${CUSTOM_ENV_VAGRANT_RUN_PUPPET:+x}" && "${CUSTOM_ENV_VAGRANT_RUN_PUPPET:-0}" == "0" ]]; then
@@ -48,8 +64,8 @@ if [[ "${CUSTOM_ENV_VAGRANT_RUN_PUPPET:+x}" && "${CUSTOM_ENV_VAGRANT_RUN_PUPPET:
 fi
 export VAGRANT_RUN_PUPPET
 
-# Определяем базовый Vagrant box.
-# Если переменная окружения CUSTOM_ENV_VAGRANT_BASE_BOX задана, она переопределяет значение по умолчанию.
+# Определяем базовый Vagrant box
+# Если переменная окружения CUSTOM_ENV_VAGRANT_BASE_BOX задана, она переопределяет значение по умолчанию
 # (str)
 VAGRANT_BASE_BOX="alse-1.7.5-adv-qemu-mg13.1.1-amd64"
 if [[ "${CUSTOM_ENV_CI_JOB_IMAGE:+x}" && "${CUSTOM_ENV_CI_JOB_IMAGE:-x}" != "x" ]]; then
@@ -60,7 +76,7 @@ fi
 export VAGRANT_BASE_BOX
 
 # Определение провайдера Vagrant (virtualbox или libvirt).
-# Это позволяет пользователям динамически изменять провайдера в CI.
+# Это позволяет пользователям динамически изменять провайдер в CI.
 # Используется в run.sh как:
 # vagrant up --provider=$VAGRANT_PROVIDER
 # (str)
@@ -70,7 +86,7 @@ if [[ "${CUSTOM_ENV_VAGRANT_PROVIDER:+x}" && "${CUSTOM_ENV_VAGRANT_PROVIDER:-x}"
 fi
 export VAGRANT_PROVIDER
 
-# Определение числа процессоров для Vagrant box.
+# Определение числа vcpu для Vagrant box.
 # Если не задано, то Vagrantfile не будет конфигурировать эту настройку.
 # (int)
 VAGRANT_CPUS='2'
@@ -89,7 +105,7 @@ fi
 export VAGRANT_MEMORY
 
 # Установка имени виртуальной машины
-# По умолчанию имя машины совпадает с VAGRANT_UID, но это можно переопределить.
+# По умолчанию имя машины совпадает с VAGRANT_UID, но это можно переопределить
 # (str)
 VAGRANT_VBOX_NAME=$VAGRANT_UID
 if [[ "${CUSTOM_ENV_VAGRANT_VBOX_NAME:+x}" && "${CUSTOM_ENV_VAGRANT_VBOX_NAME:-x}" != "x" ]]; then
@@ -97,8 +113,8 @@ if [[ "${CUSTOM_ENV_VAGRANT_VBOX_NAME:+x}" && "${CUSTOM_ENV_VAGRANT_VBOX_NAME:-x
 fi
 export VAGRANT_VBOX_NAME
 
-# Определение хоста для виртуальной машины.
-# Полезно для тестирования или сервисов (nginx), которые зависят от конкретных имен хостов.
+# Определение хоста для виртуальной машины
+# Полезно для тестирования или сервисов (nginx), которые зависят от конкретных имен хостов
 # (str)
 VAGRANT_HOSTNAME=$VAGRANT_UID
 if [[ "${CUSTOM_ENV_VAGRANT_HOSTNAME:+x}" && "${CUSTOM_ENV_VAGRANT_HOSTNAME:-x}" != "x" ]]; then
@@ -106,8 +122,8 @@ if [[ "${CUSTOM_ENV_VAGRANT_HOSTNAME:+x}" && "${CUSTOM_ENV_VAGRANT_HOSTNAME:-x}"
 fi
 export VAGRANT_HOSTNAME
 
-# Использование кастомного Vagrantfile.
-# Это позволяет предопределять собственный Vagrantfile, например, `rhel-9.Vagrantfile`.
+# Использование кастомного Vagrantfile
+# Это позволяет предопределять собственный Vagrantfile, например, `rhel-9.Vagrantfile`
 # (str)
 VAGRANT_VAGRANTFILE="Vagrantfile"
 if [[ "${CUSTOM_ENV_VAGRANT_VAGRANTFILE:+x}" && "${CUSTOM_ENV_VAGRANT_VAGRANTFILE:-x}" != "x" ]]; then
@@ -115,20 +131,20 @@ if [[ "${CUSTOM_ENV_VAGRANT_VAGRANTFILE:+x}" && "${CUSTOM_ENV_VAGRANT_VAGRANTFIL
 fi
 export VAGRANT_DEBUG
 
-# Определение директорий для сборок и кеша.
-# Эти директории используются для хранения артефактов сборки и кеша, и они привязаны к CI job и проекту.
+# Определение директорий для сборок и кеша
+# Эти директории используются для хранения артефактов сборки и кеша, и они привязаны к CI job и проекту
 # (str)
 BUILDS_DIR="${VAGRANT_DRIVER_ROOT}/builds/${CUSTOM_ENV_CI_JOB_ID:-0}"
 CACHE_DIR="${VAGRANT_DRIVER_ROOT}/cache/${CUSTOM_ENV_CI_PROJECT_ID:-0}"
 
-# Префикс для имен скриптов, чтобы избежать конфликтов с уже существующими скриптами.
-# Это полезно для того, чтобы скрипты, генерируемые GitLab Runner, не перезаписывали пользовательские скрипты.
+# Префикс для имен скриптов, чтобы избежать конфликтов с уже существующими скриптами
+# Это полезно для того, чтобы скрипты, генерируемые GitLab Runner, не перезаписывали пользовательские скрипты
 SCRIPT_PREFIX="${CUSTOM_ENV_CI_PROJECT_ID:-0}-${CUSTOM_ENV_CI_JOB_ID:-0}"
 export SCRIPT_PREFIX
 
-# Установка пользователя и имени логина для корректной работы с VirtualBox.
+# Установка пользователя и имени логина для корректной работы с VirtualBox
 export USER=$(whoami)
 export LOGNAME=$(whoami)
 
-# Исполняемые файлы.
+# Исполняемые файлы
 PATH=/bin:$PATH
